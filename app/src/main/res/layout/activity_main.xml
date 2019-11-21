@@ -6,13 +6,74 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/api_fetch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Unique Work With Retry"
+        app:layout_constraintBottom_toTopOf="@id/one_time_work_failure"
+        app:layout_constraintEnd_toStartOf="@+id/api_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/one_time_work" />
+
+    <TextView
+        android:id="@+id/api_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/api_fetch"
+        app:layout_constraintStart_toEndOf="@+id/api_fetch"
+        app:layout_constraintTop_toTopOf="@+id/api_fetch"
+        tools:text="Status" />
+
+    <Button
+        android:id="@+id/one_time_work"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="Enqueue One Time Work"
+        app:layout_constraintBottom_toTopOf="@+id/api_fetch"
+        app:layout_constraintEnd_toStartOf="@+id/one_time_work_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/one_time_work_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/one_time_work"
+        app:layout_constraintStart_toEndOf="@+id/one_time_work"
+        app:layout_constraintTop_toTopOf="@+id/one_time_work"
+        tools:text="Status" />
+
+    <Button
+        android:id="@+id/one_time_work_failure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="One Time Work Failure"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/one_time_work_failure_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/api_fetch" />
+
+    <TextView
+        android:id="@+id/one_time_work_failure_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/one_time_work_failure"
+        app:layout_constraintStart_toEndOf="@+id/one_time_work_failure"
+        app:layout_constraintTop_toTopOf="@+id/one_time_work_failure"
+        tools:text="Status" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
