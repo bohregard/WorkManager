@@ -30,8 +30,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        wm.pruneWork()
-
         wm.getWorkInfosByTagLiveData("SimpleTag").observe(this@MainActivity, Observer {
             updateWorkStatus(it, one_time_work, one_time_work_status, "Enqueue One Time Work")
         })
@@ -42,6 +40,15 @@ class MainActivity : AppCompatActivity() {
                 one_time_work_failure,
                 one_time_work_failure_status,
                 "Enqueue One Time Work"
+            )
+        })
+
+        wm.getWorkInfosByTagLiveData("ChainedTag").observe(this@MainActivity, Observer {
+            updateWorkStatus(
+                it,
+                chain_work,
+                chain_work_status,
+                "Chain Work"
             )
         })
 
@@ -91,6 +98,29 @@ class MainActivity : AppCompatActivity() {
                 wm.enqueue(uniqueWork)
             }
         }
+
+        chain_work.setOnClickListener {
+            val delayedWork = OneTimeWorkRequestBuilder<SimpleDelayWork>()
+                .setConstraints(constraints)
+                .addTag("ChainedTag")
+                .build()
+
+            val uniqueWork = OneTimeWorkRequestBuilder<SimpleDelayWork>()
+                // Defaults to Exponential @ 30 Seconds
+                .setBackoffCriteria(BackoffPolicy.LINEAR, 5, TimeUnit.SECONDS)
+                .addTag("ChainedTag")
+                .setConstraints(constraints)
+                .build()
+
+            wm.beginWith(delayedWork)
+                .then(uniqueWork)
+                .enqueue()
+        }
+
+        prune.setOnClickListener {
+            wm.cancelAllWork()
+            wm.pruneWork()
+        }
     }
 
     private fun updateWorkStatus(
@@ -102,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "$work")
         val wi = work.firstOrNull { w -> !w.state.isFinished }
 
-        status.text = if (work.all { it.state.isFinished } && work.isNotEmpty()) {
+        status.text = if (work.all { it.state.isFinished } && work.isNotEmpty() && button.tag != null) {
             work.first { it.id == button.tag as UUID }.state.name
         } else {
             "${wi?.state ?: "NO WORK"}"
