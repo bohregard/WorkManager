@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.work.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.delay
-import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -102,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         chain_work.setOnClickListener {
             val delayedWork = OneTimeWorkRequestBuilder<SimpleDelayWork>()
                 .setConstraints(constraints)
+                .setInputData(workDataOf("TEST" to "NEW VALUE"))
                 .addTag("ChainedTag")
                 .build()
 
@@ -133,7 +132,9 @@ class MainActivity : AppCompatActivity() {
         val wi = work.firstOrNull { w -> !w.state.isFinished }
 
         status.text = if (work.all { it.state.isFinished } && work.isNotEmpty() && button.tag != null) {
-            work.first { it.id == button.tag as UUID }.state.name
+            val finishedWork = work.first { it.id == button.tag as UUID }
+            Log.d(TAG, "Data: ${finishedWork.outputData}")
+            finishedWork.state.name
         } else {
             "${wi?.state ?: "NO WORK"}"
         }

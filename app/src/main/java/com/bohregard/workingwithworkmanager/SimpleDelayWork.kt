@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.coroutineScope
 import androidx.work.CoroutineWorker
+import androidx.work.workDataOf
 import kotlinx.coroutines.delay
 
 class SimpleDelayWork(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
@@ -12,8 +13,10 @@ class SimpleDelayWork(context: Context, params: WorkerParameters) : CoroutineWor
 
     override suspend fun doWork(): Result = coroutineScope {
         Log.d(TAG, "Starting Work")
+        Log.d(TAG, "Input: ${inputData.getString("TEST")}")
         delay(10L * 1000L)
         Log.d(TAG, "Ending Work")
-        Result.success()
+        val data = workDataOf("TEST" to "SomeValue")
+        Result.success(data)
     }
 }
