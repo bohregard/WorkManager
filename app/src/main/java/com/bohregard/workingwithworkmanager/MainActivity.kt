@@ -28,7 +28,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        for (i in 0 .. 120) {
+            Log.d(TAG, "$i")
+            val delayedWork = OneTimeWorkRequestBuilder<SimpleDelayWork>()
+                .setConstraints(constraints)
+                .addTag("SimpleTag")
+                .build()
+//            wm.enqueue(delayedWork)
+            wm.enqueueUniqueWork(UNIQUE_WORK, ExistingWorkPolicy.REPLACE, delayedWork)
+        }
+
         wm.getWorkInfosByTagLiveData("SimpleTag").observe(this@MainActivity, Observer {
+            Log.d(TAG, "Size: ${it.size}")
+            Log.d(TAG, "Size: ${it.filter { w -> w.state == WorkInfo.State.ENQUEUED}.size}")
+            Log.d(TAG, "Size: ${it.filter { w -> w.state.isFinished}.size}")
             updateWorkStatus(it, one_time_work, one_time_work_status, "Enqueue One Time Work")
         })
 
